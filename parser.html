@@ -1,0 +1,184 @@
+<html>
+
+<div>
+<head>
+
+<title>PL4 Parser</title>
+
+</head>
+
+<body>
+<style>
+body {
+ 
+}
+div {
+   background-image: url('background.jpg');
+}
+h2 {
+  background-color: #6d6994;
+  padding: 40px;
+  font-family: Impact, Charcoal, sans-serif;
+}
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+p {
+  font-size:25px;
+  margin-left: 10;
+  margin-right:10;
+  
+}
+.button {
+  background-color: #6d6994;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+</style>
+
+<center><h2>PL Homework Assignment 4:</h2></center>
+<center><h3>Oksana Motronchik</h3></center>
+<center><h3>Web-based Recursive Descent Recognizer</h3></center>
+
+<center><p>In this assignment you are to implement a recursive-descent recognizer with a web interface for the BNF grammar given below. Based on the pseudocode you have done in PL Assignment 1, this is a good opportunity to develop the web programming skills required by today's IT field.</p></center>
+
+<ul style="list-style: none;">
+ <li>EXP    ::= EXP  + TERM   | EXP - TERM    | TERM</li>
+ <li>TERM   ::= TERM * FACTOR | TERM / FACTOR | FACTOR</li>
+ <li>FACTOR ::= ( EXP ) | DIGIT</li>
+ <li>DIGIT  ::= 0 | 1 | 2 | 3</li>
+</ul>
+	<p>Example of some valid strings: 1+2$ , 0-3*2$, 2/(3+1)$</p>
+	<p>Example of some invalid strings: 1+2, 1*4$, 1*a$</p>
+
+<center><h3>Enter a valid String: </h3></center>
+<center><input type="text" id="input" style="height:30px;font-size:16pt;"></center>
+<center><button class="button" onclick="start()">Submit</button></center><br>
+
+<center><h3>Report</h3></center>
+<p>This was a fun project to work on. As I began working on this assignment, I had zero knowledge of JavaScript. I decided to do this assignment using JavaScript because I have always wanted to learn it and this was the perfect opportunity. The first thing I did was watch a YouTube tutorial in order to get familiar with the language and how to use it. This gave me the instructions on which editor to use and how to run the code. Then I used a variety of resources such as courseware parser examples from http://athena.ecs.csus.edu/~mei/rdp135/rdr/example.php , textbook code example from the Programming Languages Principles and Practice pages 224-237, w3schools JavaScript tutorial found here https://www.w3schools.com/js/default.asp, I also used https://stackoverflow.com/ for any other questions I had with my code. I followed the pseudocode very closely to write the parser. I struggled with some parts and it took some time to figure it out but eventually I made it work.  I spent a few days, 2-3 hours each day working on this assignment and I look forward to learning more JavaScript in the future.</p>
+
+<center><h3>   </h3></center><br>
+<script>
+var input, errorf, index;
+
+function start()
+{
+    index=0;
+    errorf=0;
+    input = document.getElementById("input").value;
+    if(input[input.length-1]==="$")
+        scan();
+    else
+        window.alert("Input String is Invalid. Missing $.");
+};
+function exp()
+{
+    term();
+    while((token()==='+') || (token()==='-'))
+    {
+        if(token()==='+')
+        {
+            match(token());
+            term();
+        }
+        else if(token()==='-')
+        {
+            match(token());
+            term();
+        }
+        else
+        {
+            error();
+        }
+    }
+};
+function term()
+{
+    factor();
+    while((token()==='*') || (token()==='/'))
+    {
+        if(token()==='*')
+        {
+            match(token());
+            factor();
+        }
+        else if(token()==='/')
+        {
+            match(token());
+            factor();
+        }
+        else
+            error();
+    }
+};
+function factor()
+{
+    if(token()==='(')
+    {
+        match(token());
+        exp();
+        match(')');
+    }
+    else if ((token() ==='0') || (token() === '1') || (token() === '2') || (token() === '3'))
+    {
+        digit();
+    }
+    else
+        error();
+};
+function digit()
+{
+    if ((token() === '0') || (token() === '1') || (token() === '2') || (token() === '3') )
+        match(token());
+    else
+        error();
+};
+
+function match(x)
+{
+    if (x === token())
+        increment();
+        else
+            error();
+};
+
+function token()
+{
+    return(input[index]);
+};
+function increment()
+{
+    if (index < (input.length -1))
+        index++;
+};
+
+
+function error()
+{
+    window.alert("Input String is Invalid");
+    errorf = 1;
+    increment();
+};
+function scan()
+{
+    exp();
+    match('$');
+    if (errorf === 0){
+        window.alert("Input String is Valid");
+    }
+};
+</script>
+</body>
+</div>
+</html>
